@@ -47,7 +47,6 @@ class NumberEncoder {
             array_push($series, $this->encodeToChar($multiplier));
             $exponent--;
         }
-        var_dump($series);
         return implode("", $series);
     }
 
