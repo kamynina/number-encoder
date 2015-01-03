@@ -25,10 +25,20 @@ class NumberEncoder {
      */
     private function getNearestExponent($number) {
         $i = 0;
-        while (pow($this->foundation, $i + 1) <= $number) {
+        while ($this->calcMultiplier($i + 1) <= $number) {
             $i++;
         }
         return $i;
+    }
+
+    /**
+     * Calc multiplier depends of number position
+     *
+     * @param int $position
+     * @return number
+     */
+    private function calcMultiplier($position) {
+        return pow($this->foundation, $position);
     }
 
     public function encode($inputValue) {
@@ -50,6 +60,22 @@ class NumberEncoder {
         return implode("", $series);
     }
 
+
+    /**
+     * Decode input string from sign system to decimals system
+     *
+     * @param $inputValue
+     * @return int
+     * @throws Exception
+     */
+    public function decode($inputValue) {
+        $result = 0;
+        foreach ( $inputValue as $position => $value ) {
+            $result += $this->decodeFromChar ( $value ) * $this->calcMultiplier ( $position );
+        }
+        return $result;
+    }
+
     /**
      * Encode to char from alphabet (get by index)
      *
@@ -63,5 +89,21 @@ class NumberEncoder {
         }
         return $this->alphabet[$number];
     }
+
+    /**
+     * Decode char
+     *
+     * @param $char
+     * @return int
+     * @throws Exception
+     */
+    private function decodeFromChar($char) {
+        $number = array_search($char, $this->alphabet);
+        if ($number === false) {
+            throw new Exception("No supported chart " . $char);
+        }
+        return $number;
+    }
+
 }
 ?>
