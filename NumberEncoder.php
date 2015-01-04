@@ -70,8 +70,9 @@ class NumberEncoder {
      */
     public function decode($inputValue) {
         $result = 0;
-        foreach ( $inputValue as $position => $value ) {
-            $result += $this->decodeFromChar ( $value ) * $this->calcMultiplier ( $position );
+        $inputArr = array_reverse(str_split($inputValue));
+        foreach ( $inputArr as $position => $value ) {
+            $result += ($this->decodeFromChar ( $value ) * $this->calcMultiplier ( $position ));
         }
         return $result;
     }
@@ -98,12 +99,11 @@ class NumberEncoder {
      * @throws Exception
      */
     private function decodeFromChar($char) {
-        $number = array_search($char, $this->alphabet);
+        $number = array_search($char, $this->alphabet, true);
         if ($number === false) {
             throw new Exception("No supported chart " . $char);
         }
         return $number;
     }
-
 }
 ?>
